@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/cars_list_screen.dart';
 import 'screens/add_car_screen.dart';
+import 'screens/about_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,8 @@ class _MyAppState extends State<MyApp> {
   // Lista de pantallas 
   static List<Widget> _widgetOptions = <Widget>[
     CarsListScreen(),  
-    AddCarScreen(),    
+    AddCarScreen(),
+     AboutScreen(),    
   ];
 
   
@@ -37,10 +39,12 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: Text('Colección de Autos'),
+          backgroundColor: Colors.indigo[100],
         ),
         body: _widgetOptions.elementAt(_selectedIndex),  
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,  
+          backgroundColor: Colors.indigo[100],
           onTap: _onItemTapped,  
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -50,6 +54,10 @@ class _MyAppState extends State<MyApp> {
             BottomNavigationBarItem(
               icon: Icon(Icons.add),
               label: 'Agregar',  
+            ),
+            BottomNavigationBarItem(  
+              icon: Icon(Icons.info),
+              label: 'Acerca de',
             ),
           ],
           selectedItemColor: Colors.deepPurple,  
