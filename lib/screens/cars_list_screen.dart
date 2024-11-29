@@ -26,11 +26,11 @@ class _CarsListScreenState extends State<CarsListScreen> {
       year: 2021,
     ),
     Car(
-      name: 'BMW M3',
-      description: 'Un coche de lujo con gran desempeño.',
-      imageUrl: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiP1EjYNV39d6zKrEN5MPhilwncbZbRF3BGl41HvtRAUvfqy7oirohcQKdIIS4j51WUoLzUoHIMpFI7IgqEJLvs1-IYI7FxFscPuTVL6WVAOLQD5klppb6B46Y5v11XIka13RAYJ7txJdk/s1600/bmw-serie-2-m2-2018-autoblog-uruguay-precios+%25284%2529.jpg',
-      brand: 'BMW',
-      year: 2020,
+      name: 'Opala',
+      description: 'Un coche de lujo de la epoca en Brasil.',
+      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Chevrolet_Opala_Comodoro_1978.jpg/640px-Chevrolet_Opala_Comodoro_1978.jpg',
+      brand: 'Chevrolet',
+      year: 1965,
     ),
   ];
 
@@ -38,7 +38,7 @@ class _CarsListScreenState extends State<CarsListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Car Collection'),
+        title: Text(''),
       ),
       body: ListView.builder(
         itemCount: _cars.length,
@@ -49,8 +49,7 @@ class _CarsListScreenState extends State<CarsListScreen> {
             subtitle: Text(_cars[index].brand),
             trailing: Icon(Icons.arrow_forward),
             onTap: () {
-              // Navegar a la pantalla de detalles del auto
-              Navigator.push(
+               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => CarDetailScreen(car: _cars[index]),
@@ -59,16 +58,6 @@ class _CarsListScreenState extends State<CarsListScreen> {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Agregar un nuevo auto
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddCarScreen()),
-          );
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

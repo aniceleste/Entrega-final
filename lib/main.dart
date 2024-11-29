@@ -12,17 +12,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0; // El índice de la pestaña seleccionada
+  
+  int _selectedIndex = 0; 
 
-  // Las pantallas que se mostrarán según el índice seleccionado
+  // Lista de pantallas 
   static List<Widget> _widgetOptions = <Widget>[
-    CarsListScreen(), 
-    AddCarScreen(),  
+    CarsListScreen(),  
+    AddCarScreen(),    
   ];
 
+  
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Cambiar de pantalla según el índice
+      _selectedIndex = index; // Actualiza el índice 
     });
   }
 
@@ -30,26 +32,28 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Colección de Autos',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.purple),
+      debugShowCheckedModeBanner: false, // Elimina la barra de depuración
       home: Scaffold(
         appBar: AppBar(
           title: Text('Colección de Autos'),
         ),
-        body: _widgetOptions.elementAt(_selectedIndex), 
+        body: _widgetOptions.elementAt(_selectedIndex),  
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex, 
-          onTap: _onItemTapped, 
+          currentIndex: _selectedIndex,  
+          onTap: _onItemTapped,  
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Inicio',
+              label: 'Inicio',  
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add),
-              label: 'Agregar',
+              label: 'Agregar',  
             ),
           ],
+          selectedItemColor: Colors.deepPurple,  
+          unselectedItemColor: Colors.deepPurpleAccent, 
         ),
       ),
     );
