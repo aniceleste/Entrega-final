@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'add_car_screen.dart';
-import 'car_detail_screen.dart';
-import '../models/car.dart';
+import 'package:proyecto_final/models/car.dart';
+import 'package:proyecto_final/screens/car_detail_screen.dart';
+import 'package:proyecto_final/db/db_helper.dart';
 
 class CarsListScreen extends StatefulWidget {
   @override
@@ -9,55 +9,100 @@ class CarsListScreen extends StatefulWidget {
 }
 
 class _CarsListScreenState extends State<CarsListScreen> {
-  // Lista estática de autos
-  List<Car> _cars = [
-    Car(
-      name: 'Ford Mustang',
-      description: 'Un muscle car clásico.',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7f/1965_Ford_Mustang_2D_Hardtop_Front.jpg',
-      brand: 'Ford',
-      year: 1965,
-    ),
-    Car(
-      name: 'Chevrolet Camaro',
-      description: 'Un coche deportivo de alto rendimiento.',
-      imageUrl: 'https://hips.hearstapps.com/hmg-prod/images/2021-chevrolet-camaro-zl1-mmp-1-1604071262.jpg',
-      brand: 'Chevrolet',
-      year: 2021,
-    ),
-    Car(
-      name: 'Opala',
-      description: 'Un coche de lujo de la epoca en Brasil.',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Chevrolet_Opala_Comodoro_1978.jpg/640px-Chevrolet_Opala_Comodoro_1978.jpg',
-      brand: 'Chevrolet',
-      year: 1965,
-    ),
-  ];
+  List<Car> cars = [];
+  List<Car> filteredCars = [];
+  String searchQuery = '';
+  late TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    _loadCars();
+  }
+
+  // Cargar los autos de la base de datos
+  void _loadCars() async {
+    final carsList = await DBHelper().getCars();
+    setState(() {
+      cars = carsList;
+      filteredCars = cars;
+    });
+  }
+
+  // Filtrar los autos según el texto de búsqueda
+  void _filterCars(String query) async {
+    setState(() {
+      searchQuery = query;
+    });
+    if (query.isEmpty) {
+      setState(() {
+        filteredCars = cars; // Mostrar todos los autos si la búsqueda está vacía
+      });
+    } else {
+      final filteredList = await DBHelper().searchCars(query);
+      setState(() {
+        filteredCars = filteredList;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
-      ),
-      body: ListView.builder(
-        itemCount: _cars.length,
-        itemBuilder: (ctx, index) {
-          return ListTile(
-            leading: Image.network(_cars[index].imageUrl),
-            title: Text(_cars[index].name),
-            subtitle: Text(_cars[index].brand),
-            trailing: Icon(Icons.arrow_forward),
-            onTap: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CarDetailScreen(car: _cars[index]),
+        title: Text('Colección de Autos'),
+        actions: [
+          // Barra de búsqueda en el AppBar
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 200,
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterCars,
+                decoration: InputDecoration(
+                  hintText: 'Buscar...',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.4),
+                  prefixIcon: Icon(Icons.search, color: Colors.white),
                 ),
-              );
-            },
-          );
-        },
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Lista de autos filtrados
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredCars.length,
+              itemBuilder: (context, index) {
+                final car = filteredCars[index];
+                return ListTile(
+                  leading: Image.network(car.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                  title: Text(car.name),
+                  subtitle: Text('${car.brand} - ${car.year}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CarDetailScreen(car: car),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
